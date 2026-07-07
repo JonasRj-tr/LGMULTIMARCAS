@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Represents an e-commerce catalog product with size-based stocks",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Auto-generated document ID" },
+        "name": { "type": "string", "description": "Product display name" },
+        "description": { "type": "string", "description": "Product description" },
+        "category": { "type": "string", "enum": ["Sapatos", "Roupas", "Acessórios"], "description": "Selected product category group" },
+        "price": { "type": "number", "description": "Product unit sales price in BRL" },
+        "compareAtPrice": { "type": "number", "description": "Original crossed-out compare-at price in BRL" },
+        "images": { "type": "array", "description": "List of absolute external photo URLs" },
+        "sizes": { "type": "object", "description": "Size name mapping to stock count, e.g. PP: 5, 41: 2" },
+        "isFeatured": { "type": "boolean", "description": "Whether to highlight on homepage sliders" },
+        "createdAt": { "type": "number", "description": "Creation timestamp in epoch ms" }
+      },
+      "required": ["name", "category", "price", "images", "sizes", "isFeatured", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Represents an e-commerce sale generated from the online cart checkout or administrative POS counter",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Auto-generated document ID" },
+        "code": { "type": "string", "description": "Branded sequential short identifier, e.g. #LG-1032" },
+        "customerName": { "type": "string", "description": "Buyer's complete name" },
+        "customerPhone": { "type": "string", "description": "Buyer's direct contact phone number" },
+        "address": { "type": "object", "description": "Optional shipping address fields for online deliveries" },
+        "items": { "type": "array", "description": "List of purchased items with product codes, sizes, and pricing" },
+        "subtotal": { "type": "number", "description": "Accumulated items cost" },
+        "discount": { "type": "number", "description": "Subtracting promo coupon values" },
+        "shipping": { "type": "number", "description": "Calculated delivery postal cost" },
+        "total": { "type": "number", "description": "Final sum charged to client" },
+        "status": { "type": "string", "enum": ["Pendente", "Aprovado", "Enviado", "Cancelado"], "description": "Order processing state" },
+        "type": { "type": "string", "enum": ["Online", "PDV"], "description": "Whether registered online or from the POS counter" },
+        "couponCode": { "type": "string", "description": "Optional code of the applied coupon" },
+        "createdAt": { "type": "number", "description": "Order date in epoch ms" }
+      },
+      "required": ["code", "customerName", "customerPhone", "items", "subtotal", "discount", "shipping", "total", "status", "type", "createdAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Promotional discounts applied to checkout carts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Auto-generated document ID" },
+        "code": { "type": "string", "description": "Coupon short code, e.g. GOLD10" },
+        "type": { "type": "string", "enum": ["percentage", "fixed"], "description": "Discount calculation type" },
+        "value": { "type": "number", "description": "Discount percentage (10 for 10%) or fixed BRL price (50 for 50 BRL)" },
+        "active": { "type": "boolean", "description": "Whether checkout allows using this promo" },
+        "minPurchase": { "type": "number", "description": "Optional minimal purchase sum to unlock the discount" }
+      },
+      "required": ["code", "type", "value", "active"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Configurations for contacts, rates, and banners",
+      "type": "object",
+      "properties": {
+        "whatsappNumber": { "type": "string", "description": "Configured whatsapp receive contact line" },
+        "instagramUrl": { "type": "string", "description": "Direct Instagram link" },
+        "facebookUrl": { "type": "string", "description": "Direct Facebook link" },
+        "banners": { "type": "array", "description": "Array of slides rotating on the Hero homepage" },
+        "defaultShippingCost": { "type": "number", "description": "Freight fallback cost" },
+        "freeShippingThreshold": { "type": "number", "description": "Cart subtotal to unlock zero-cost freight" }
+      },
+      "required": ["whatsappNumber", "instagramUrl", "facebookUrl", "banners", "defaultShippingCost", "freeShippingThreshold"]
+    }
+  },
+  "firestore": {
+    "products": {
+      "schema": "Product",
+      "description": "Catalogue products details"
+    },
+    "orders": {
+      "schema": "Order",
+      "description": "Transactions log"
+    },
+    "coupons": {
+      "schema": "Coupon",
+      "description": "Promo codes list"
+    },
+    "settings": {
+      "schema": "StoreSettings",
+      "description": "Store settings single document"
+    }
+  }
+}

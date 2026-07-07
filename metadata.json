@@ -1,0 +1,8 @@
+{
+  "name": "LG Multimarcas",
+  "description": "Plataforma de e-commerce premium em tempo real para a LG Multimarcas, com catálogo completo, carrinho com simulador de frete, checkout via WhatsApp e painel administrativo (PDV, controle de estoque, cupons).",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
