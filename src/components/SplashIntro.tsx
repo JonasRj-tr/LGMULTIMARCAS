@@ -52,7 +52,7 @@ export default function SplashIntro({ logoUrl, onComplete }: SplashIntroProps) {
   }, []);
 
   // Premium text characters for cool staggered animation
-  const titleText = "LG MULTIMARCAS";
+  const titleText = "MK MULTIMARCAS";
   const subtitleText = "PREMIUM STREETWEAR & HYPE COUTURE";
 
   return (
@@ -101,8 +101,8 @@ export default function SplashIntro({ logoUrl, onComplete }: SplashIntroProps) {
           {/* Black core container */}
           <div className="absolute inset-[3px] rounded-full bg-zinc-950 flex items-center justify-center overflow-hidden">
             <img
-              src={logoUrl || 'https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png'}
-              alt="Logo LG Multimarcas"
+              src={logoUrl === 'https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png' ? 'https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png' : (logoUrl || 'https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png')}
+              alt="Logo MK Multimarcas"
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover"
             />

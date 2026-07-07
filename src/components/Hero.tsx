@@ -46,7 +46,7 @@ const FALLBACK_BANNERS: HeroBanner[] = [
   {
     id: 'slide-6',
     imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=1200',
-    title: 'ESTILO EXCLUSIVO LG MULTIMARCAS',
+    title: 'ESTILO EXCLUSIVO MK MULTIMARCAS',
     subtitle: 'Sinônimo de sofisticação e atitude. Parcelamento flexível e envio rápido para todo o país.',
     link: '#produtos'
   }

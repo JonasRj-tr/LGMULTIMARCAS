@@ -2,13 +2,18 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  category: 'Sapatos' | 'Roupas' | 'Acessórios';
+  category: string;
   price: number;
   compareAtPrice?: number;
   images: string[];
   sizes: { [size: string]: number }; // Size name mapped to stock count, e.g., { "38": 5, "M": 10 }
   isFeatured: boolean;
   createdAt: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
 }
 
 export interface CartItem {

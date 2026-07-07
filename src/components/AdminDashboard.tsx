@@ -25,10 +25,11 @@ import {
   Save,
   Link2
 } from 'lucide-react';
-import { Product, Order, Coupon, StoreSettings, CartItem, HeroBanner } from '../types';
+import { Product, Order, Coupon, StoreSettings, CartItem, HeroBanner, Category } from '../types';
 import { dbService } from '../services/db';
 import { isFirebaseEnabled, saveFirebaseConfig, auth } from '../firebase';
 import { signInAnonymously, signOut } from 'firebase/auth';
+import CategoryManagement from './CategoryManagement';
 
 interface AdminDashboardProps {
   products: Product[];
@@ -39,7 +40,7 @@ interface AdminDashboardProps {
   onClose: () => void;
 }
 
-type AdminTab = 'overview' | 'pos' | 'products' | 'coupons' | 'settings';
+type AdminTab = 'overview' | 'pos' | 'products' | 'coupons' | 'settings' | 'categories';
 
 export default function AdminDashboard({
   products,
@@ -54,6 +55,14 @@ export default function AdminDashboard({
   const [password, setPassword] = useState('');
 
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const unsub = dbService.getCategories(setCategories);
+    return () => {
+      unsub();
+    };
+  }, []);
 
   // -------------------------------------------------------------
   // POS STATE
@@ -122,12 +131,15 @@ export default function AdminDashboard({
   // LOGIN VALIDATOR
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim() === 'lgmultimarcas@x.com' && password === 'lgmultimarcas4321') {
+    const isLgAdmin = email.trim() === 'lgmultimarcas@x.com' && password === 'lgmultimarcas4321';
+    const isMkAdmin = email.trim() === 'mkmultimarcas@x.com' && password === 'mkmultimarcas4321';
+    
+    if (isLgAdmin || isMkAdmin) {
       if (isFirebaseEnabled()) {
         try {
           await signInAnonymously(auth);
           setIsLoggedIn(true);
-          showToast('Bem-vindo ao Painel LG Multimarcas (Firebase Autenticado)!', 'success');
+          showToast('Bem-vindo ao Painel MK Multimarcas (Firebase Autenticado)!', 'success');
         } catch (err: any) {
           console.error("Firebase auth login error:", err);
           showToast('Falha ao conectar com o Firebase Auth. Entrando em modo leitura local...', 'error');
@@ -135,7 +147,7 @@ export default function AdminDashboard({
         }
       } else {
         setIsLoggedIn(true);
-        showToast('Bem-vindo ao Painel LG Multimarcas (Modo Local)!', 'success');
+        showToast('Bem-vindo ao Painel MK Multimarcas (Modo Local)!', 'success');
       }
     } else {
       showToast('E-mail ou senha administrativa incorretos.', 'error');
@@ -621,6 +633,16 @@ export default function AdminDashboard({
           >
             <Settings className="h-4 w-4" />
             Configurações
+          </button>
+
+          <button
+            onClick={() => setActiveTab('categories')}
+            className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider rounded-xl transition-all shrink-0 md:shrink ${
+              activeTab === 'categories' ? 'bg-[#d4af37]/10 text-[#d4af37] border-l-2 border-[#d4af37]' : 'text-zinc-400 hover:text-white hover:bg-zinc-900/40'
+            }`}
+          >
+            <Package className="h-4 w-4" />
+            Categorias
           </button>
         </nav>
 
@@ -1428,7 +1450,7 @@ export default function AdminDashboard({
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Contact and shipping */}
+                {/* ... existing settings ... */}
                 <div className="p-6 rounded-3xl bg-zinc-900/30 border border-zinc-800/80 space-y-4 text-xs">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-[#d4af37]">Canais e Custos</h3>
                   
@@ -1448,7 +1470,7 @@ export default function AdminDashboard({
                       <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Instagram URL</label>
                       <input
                         type="url"
-                        placeholder="https://instagram.com/lgmultimarcas"
+                        placeholder="https://instagram.com/mkmultimarcas"
                         value={sInstagram}
                         onChange={(e) => setSInstagram(e.target.value)}
                         className="w-full bg-black text-white px-3 py-2.5 rounded-lg border border-zinc-800 outline-none"
@@ -1459,7 +1481,7 @@ export default function AdminDashboard({
                       <label className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Facebook URL</label>
                       <input
                         type="url"
-                        placeholder="https://facebook.com/lgmultimarcas"
+                        placeholder="https://facebook.com/mkmultimarcas"
                         value={sFacebook}
                         onChange={(e) => setSFacebook(e.target.value)}
                         className="w-full bg-black text-white px-3 py-2.5 rounded-lg border border-zinc-800 outline-none"
@@ -1470,7 +1492,7 @@ export default function AdminDashboard({
                       <label className="text-[10px] font-mono uppercase tracking-wider text-[#d4af37] font-bold">URL Externo do Logotipo (Logo)</label>
                       <input
                         type="url"
-                        placeholder="https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png"
+                        placeholder="https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png"
                         value={sLogoUrl}
                         onChange={(e) => setSLogoUrl(e.target.value)}
                         className="w-full bg-black text-[#d4af37] font-semibold px-3 py-2.5 rounded-lg border border-zinc-800 focus:border-[#d4af37] outline-none"
@@ -1543,6 +1565,10 @@ export default function AdminDashboard({
                 </div>
               </div>
             </motion.div>
+          )}
+
+          {activeTab === 'categories' && (
+            <CategoryManagement categories={categories} />
           )}
 
         </AnimatePresence>

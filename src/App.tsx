@@ -52,7 +52,7 @@ export default function App() {
   const [storeSettings, setStoreSettings] = useState<StoreSettings>({
     whatsappNumber: '5511999999999',
     instagramUrl: 'https://www.instagram.com/lg_multimarcas_ofc/',
-    facebookUrl: 'https://facebook.com/lgmultimarcas',
+    facebookUrl: 'https://facebook.com/mkmultimarcas',
     defaultShippingCost: 18.00,
     freeShippingThreshold: 250.00,
     banners: []
@@ -352,10 +352,10 @@ export default function App() {
               <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-black p-[2px]">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-yellow-400 opacity-90" />
                 <div className="absolute inset-[2px] rounded-full bg-black flex items-center justify-center">
-                  <span className="font-sans text-base font-black text-[#d4af37]">LG</span>
+                  <span className="font-sans text-base font-black text-[#d4af37]">MK</span>
                 </div>
               </div>
-              <h3 className="font-sans text-sm font-black tracking-widest text-white">LG <span className="text-[#d4af37]">MULTIMARCAS</span></h3>
+              <h3 className="font-sans text-sm font-black tracking-widest text-white">MK <span className="text-[#d4af37]">MULTIMARCAS</span></h3>
             </div>
             <p className="text-xs text-zinc-500 leading-relaxed max-w-xs font-light">
               Sua boutique premium online de calçados importados raras, roupas de grife de alta costura e acessórios de luxo urbano. Autenticidade, rapidez e atendimento exclusivo.
@@ -391,7 +391,7 @@ export default function App() {
                 <Phone className="h-4 w-4" />
               </a>
             </div>
-            <p className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">LG Multimarcas CNPJ: 00.000.000/0001-00. © 2026</p>
+            <p className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">MK Multimarcas CNPJ: 00.000.000/0001-00. © 2026</p>
           </div>
 
           {/* Column 3: Contacts */}

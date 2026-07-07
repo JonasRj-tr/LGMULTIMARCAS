@@ -38,19 +38,19 @@ export default function Header({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
           
-          {/* LOGO: LG dourado com imagem de logo externa */}
+          {/* LOGO: MK dourado com imagem de logo externa */}
           <div id="app-logo" className="flex items-center gap-3 cursor-pointer" onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}>
             <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-black p-[1px] border border-[#d4af37]/30 shadow-lg shadow-[#d4af37]/5 overflow-hidden">
               <img
-                src={logoUrl || 'https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png'}
-                alt="Logo LG Multimarcas"
+                src={logoUrl === 'https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png' ? 'https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png' : (logoUrl || 'https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png')}
+                alt="Logo MK Multimarcas"
                 referrerPolicy="no-referrer"
                 className="h-full w-full object-cover rounded-full"
               />
             </div>
             <div className="hidden sm:block">
               <h1 className="font-sans text-lg font-black tracking-widest text-[#d4af37]">
-                LG <span className="text-white font-light">MULTIMARCAS</span>
+                MK <span className="text-white font-light">MULTIMARCAS</span>
               </h1>
               <p className="font-mono text-[9px] uppercase tracking-widest text-zinc-500">Premium Concept</p>
             </div>

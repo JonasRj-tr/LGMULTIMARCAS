@@ -15,7 +15,7 @@ import {
   runTransaction
 } from 'firebase/firestore';
 import { db, isFirebaseEnabled, auth } from '../firebase';
-import { Product, Order, Coupon, StoreSettings, HeroBanner } from '../types';
+import { Product, Order, Coupon, StoreSettings, HeroBanner, Category } from '../types';
 
 // Enum for Firestore operations (Error handling constraint)
 enum OperationType {
@@ -148,7 +148,7 @@ const SEEDED_PRODUCTS: Product[] = [
 
 // SEEDED INITIAL COUPONS
 const SEEDED_COUPONS: Coupon[] = [
-  { id: 'cp-1', code: 'LG10', type: 'percentage', value: 10, active: true, minPurchase: 100 },
+  { id: 'cp-1', code: 'MK10', type: 'percentage', value: 10, active: true, minPurchase: 100 },
   { id: 'cp-2', code: 'BEMVINDO50', type: 'fixed', value: 50, active: true, minPurchase: 300 },
   { id: 'cp-3', code: 'GOLDVIP', type: 'percentage', value: 15, active: true, minPurchase: 500 }
 ];
@@ -157,10 +157,10 @@ const SEEDED_COUPONS: Coupon[] = [
 const DEFAULT_SETTINGS: StoreSettings = {
   whatsappNumber: '5511999999999', // Default phone number for WhatsApp wa.me link
   instagramUrl: 'https://www.instagram.com/lg_multimarcas_ofc/',
-  facebookUrl: 'https://facebook.com/lgmultimarcas',
+  facebookUrl: 'https://facebook.com/mkmultimarcas',
   defaultShippingCost: 20.00,
   freeShippingThreshold: 350.00,
-  logoUrl: 'https://i.postimg.cc/ncDXkT6v/Chat-GPT-Image-7-de-jul-de-2026-16-19-45.png',
+  logoUrl: 'https://i.postimg.cc/bwt2yn1j/Chat-GPT-Image-7-de-jul-de-2026-19-12-48.png',
   banners: [
     {
       id: 'b-1',
@@ -633,6 +633,90 @@ export const dbService = {
       const filtered = coupons.filter(c => c.id !== id);
       saveLocalData('LG_COUPONS', filtered);
       triggerLocalListeners('coupons', filtered);
+    }
+  },
+
+  // CATEGORIES
+  getCategories(callback: (categories: Category[]) => void) {
+    if (isFirebaseEnabled()) {
+      const q = collection(db, 'categories');
+      return onSnapshot(q, (snapshot) => {
+        const categories: Category[] = [];
+        snapshot.forEach((docSnap) => {
+          categories.push({ id: docSnap.id, ...docSnap.data() } as Category);
+        });
+
+        // Seed if empty
+        if (categories.length === 0) {
+          console.log('Seeding initial categories to Firestore...');
+          const initial = [{ name: 'Sapatos' }, { name: 'Roupas' }, { name: 'Acessórios' }];
+          initial.forEach(async (cat) => {
+            try {
+              await addDoc(collection(db, 'categories'), cat);
+            } catch (err) {
+              console.error('Error seeding category: ', err);
+            }
+          });
+        }
+        callback(categories);
+      }, (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'categories');
+      });
+    } else {
+      const categories = getLocalData<Category[]>('MK_CATEGORIES', [{id: 'cat-1', name: 'Sapatos'}, {id: 'cat-2', name: 'Roupas'}, {id: 'cat-3', name: 'Acessórios'}]);
+      callback(categories);
+      return registerLocalListener('categories', callback);
+    }
+  },
+
+  async addCategory(name: string): Promise<string> {
+    if (isFirebaseEnabled()) {
+      try {
+        const docRef = await addDoc(collection(db, 'categories'), { name });
+        return docRef.id;
+      } catch (error) {
+        return handleFirestoreError(error, OperationType.CREATE, 'categories');
+      }
+    } else {
+      const categories = getLocalData<Category[]>('MK_CATEGORIES', [{id: 'cat-1', name: 'Sapatos'}, {id: 'cat-2', name: 'Roupas'}, {id: 'cat-3', name: 'Acessórios'}]);
+      const id = 'cat-' + Date.now();
+      categories.push({ id, name });
+      saveLocalData('MK_CATEGORIES', categories);
+      triggerLocalListeners('categories', categories);
+      return id;
+    }
+  },
+
+  async updateCategory(id: string, name: string): Promise<void> {
+    if (isFirebaseEnabled()) {
+      try {
+        await updateDoc(doc(db, 'categories', id), { name });
+      } catch (error) {
+        handleFirestoreError(error, OperationType.UPDATE, `categories/${id}`);
+      }
+    } else {
+      const categories = getLocalData<Category[]>('MK_CATEGORIES', []);
+      const index = categories.findIndex(c => c.id === id);
+      if (index !== -1) {
+        categories[index].name = name;
+        saveLocalData('MK_CATEGORIES', categories);
+        triggerLocalListeners('categories', categories);
+      }
+    }
+  },
+
+  async deleteCategory(id: string): Promise<void> {
+    if (isFirebaseEnabled()) {
+      try {
+        await deleteDoc(doc(db, 'categories', id));
+      } catch (error) {
+        handleFirestoreError(error, OperationType.DELETE, `categories/${id}`);
+      }
+    } else {
+      const categories = getLocalData<Category[]>('MK_CATEGORIES', []);
+      const filtered = categories.filter(c => c.id !== id);
+      saveLocalData('MK_CATEGORIES', filtered);
+      triggerLocalListeners('categories', filtered);
     }
   },
 
